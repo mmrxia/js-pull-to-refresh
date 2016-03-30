@@ -1,3 +1,9 @@
+/*
+* ä¸‹æ‹‰åˆ·æ–°ï¼Œä¸Šæ‹‰åŠ è½½æ’ä»¶ drop.js
+* by xqs @2016
+* æ”¯æŒjquery&zepto
+*/
+
 ;
 (function ($) {
     'use strict';
@@ -11,54 +17,54 @@
     var MyDropLoad = function (element, options) {
         var me = this;
         me.$element = $(element);
-        // ÉÏ·½ÊÇ·ñ²åÈëDOM
+        // ä¸Šæ–¹æ˜¯å¦æ’å…¥DOM
         me.upInsertDOM = false;
-        // loading×´Ì¬
+        // loadingçŠ¶æ€
         me.loading = false;
-        // ÊÇ·ñËø¶¨
+        // æ˜¯å¦é”å®š
         me.isLockUp = false;
         me.isLockDown = false;
-        // ÊÇ·ñÓĞÊı¾İ
+        // æ˜¯å¦æœ‰æ•°æ®
         me.isData = true;
         me._scrollTop = 0;
         me.init(options);
     };
 
-    // ³õÊ¼»¯
+    // åˆå§‹åŒ–
     MyDropLoad.prototype.init = function (options) {
         var me = this;
         me.opts = $.extend(true, {}, {
-            scrollArea: me.$element,                                            // »¬¶¯ÇøÓò
-            domUp: {                                                            // ÉÏ·½DOM
+            scrollArea: me.$element,                                            // æ»‘åŠ¨åŒºåŸŸ
+            domUp: {                                                            // ä¸Šæ–¹DOM
                 domClass: 'dropload-up',
-                domRefresh: '<div class="dropload-refresh">¡ıÏÂÀ­Ë¢ĞÂ</div>',
-                domUpdate: '<div class="dropload-update">¡üÊÍ·Å¸üĞÂ</div>',
-                domLoad: '<div class="dropload-load"><span class="loading"></span>¼ÓÔØÖĞ...</div>'
+                domRefresh: '<div class="dropload-refresh">â†“ä¸‹æ‹‰åˆ·æ–°</div>',
+                domUpdate: '<div class="dropload-update">â†‘é‡Šæ”¾æ›´æ–°</div>',
+                domLoad: '<div class="dropload-load"><span class="loading"></span>åŠ è½½ä¸­...</div>'
             },
-            domDown: {                                                          // ÏÂ·½DOM
+            domDown: {                                                          // ä¸‹æ–¹DOM
                 domClass: 'dropload-down',
-                domRefresh: '<div class="dropload-refresh">¡üÉÏÀ­¼ÓÔØ¸ü¶à</div>',
-                domLoad: '<div class="dropload-load"><span class="loading"></span>¼ÓÔØÖĞ...</div>',
-                domNoData: '<div class="dropload-noData">ÔİÎŞÊı¾İ</div>'
+                domRefresh: '<div class="dropload-refresh">â†‘ä¸Šæ‹‰åŠ è½½æ›´å¤š</div>',
+                domLoad: '<div class="dropload-load"><span class="loading"></span>åŠ è½½ä¸­...</div>',
+                domNoData: '<div class="dropload-noData">æš‚æ— æ•°æ®</div>'
             },
-            distance: 50,                                                       // À­¶¯¾àÀë
-            threshold: '',                                                      // ÌáÇ°¼ÓÔØ¾àÀë
-            loadUpFn: '',                                                       // ÉÏ·½function
-            loadDownFn: ''                                                      // ÏÂ·½function
+            distance: 50,                                                       // æ‹‰åŠ¨è·ç¦»
+            threshold: '',                                                      // æå‰åŠ è½½è·ç¦»
+            loadUpFn: '',                                                       // ä¸Šæ–¹function
+            loadDownFn: ''                                                      // ä¸‹æ–¹function
         }, options);
 
-        // Èç¹û¼ÓÔØÏÂ·½£¬ÊÂÏÈÔÚÏÂ·½²åÈëDOM
+        // å¦‚æœåŠ è½½ä¸‹æ–¹ï¼Œäº‹å…ˆåœ¨ä¸‹æ–¹æ’å…¥DOM
         if (me.opts.loadDownFn != '') {
             me.$element.append('<div class="' + me.opts.domDown.domClass + '">' + me.opts.domDown.domRefresh + '</div>');
             me.$domDown = $('.' + me.opts.domDown.domClass);
         }
 
-        // ÅĞ¶Ï¹ö¶¯ÇøÓò
+        // åˆ¤æ–­æ»šåŠ¨åŒºåŸŸ
         if (me.opts.scrollArea == win) {
             me.$scrollArea = $win;
-            // »ñÈ¡ÎÄµµ¸ß¶È
+            // è·å–æ–‡æ¡£é«˜åº¦
             me._scrollContentHeight = $doc.height();
-            // »ñÈ¡winÏÔÊ¾Çø¸ß¶È  ¡ª¡ª ÕâÀïÓĞ¿Ó
+            // è·å–winæ˜¾ç¤ºåŒºé«˜åº¦  â€”â€” è¿™é‡Œæœ‰å‘
             me._scrollWindowHeight = doc.documentElement.clientHeight;
         } else {
             me.$scrollArea = me.opts.scrollArea;
@@ -66,22 +72,22 @@
             me._scrollWindowHeight = me.$element.height();
         }
 
-        // Èç¹ûÎÄµµ¸ß¶È²»´óÓÚ´°¿Ú¸ß¶È£¬Êı¾İ½ÏÉÙ£¬×Ô¶¯¼ÓÔØÏÂ·½Êı¾İ
+        // å¦‚æœæ–‡æ¡£é«˜åº¦ä¸å¤§äºçª—å£é«˜åº¦ï¼Œæ•°æ®è¾ƒå°‘ï¼Œè‡ªåŠ¨åŠ è½½ä¸‹æ–¹æ•°æ®
         if (me._scrollContentHeight <= me._scrollWindowHeight) {
             fnLoadDown();
         }
 
-        // ´°¿Úµ÷Õû
+        // çª—å£è°ƒæ•´
         $win.on('resize', function () {
             if (me.opts.scrollArea == win) {
-                // ÖØĞÂ»ñÈ¡winÏÔÊ¾Çø¸ß¶È
+                // é‡æ–°è·å–winæ˜¾ç¤ºåŒºé«˜åº¦
                 me._scrollWindowHeight = win.innerHeight;
             } else {
                 me._scrollWindowHeight = me.$element.height();
             }
         });
 
-        // °ó¶¨´¥Ãş
+        // ç»‘å®šè§¦æ‘¸
         me.$element.on('touchstart', function (e) {
             if (!me.loading) {
                 fnTouches(e);
@@ -100,11 +106,11 @@
             }
         });
 
-        // ¼ÓÔØÏÂ·½
+        // åŠ è½½ä¸‹æ–¹
         me.$scrollArea.on('scroll', function () {
             me._scrollTop = me.$scrollArea.scrollTop();
             if (me.opts.threshold === '') {
-                // Ä¬ÈÏ»¬µ½¼ÓÔØÇø2/3´¦Ê±¼ÓÔØ
+                // é»˜è®¤æ»‘åˆ°åŠ è½½åŒº2/3å¤„æ—¶åŠ è½½
                 me._threshold = Math.floor(me.$domDown.height() * 1 / 3);
             } else {
                 me._threshold = me.opts.threshold;
@@ -115,7 +121,7 @@
             }
         });
 
-        // ¼ÓÔØÏÂ·½·½·¨
+        // åŠ è½½ä¸‹æ–¹æ–¹æ³•
         function fnLoadDown() {
             me.direction = 'up';
             me.$domDown.html(me.opts.domDown.domLoad);
@@ -134,7 +140,7 @@
     // touchstart
     function fnTouchstart(e, me) {
         me._startY = e.touches[0].pageY;
-        // ¼Ç×¡´¥ÃşÊ±µÄscrolltopÖµ
+        // è®°ä½è§¦æ‘¸æ—¶çš„scrolltopå€¼
         me.touchScrollTop = me.$scrollArea.scrollTop();
     }
 
@@ -151,12 +157,12 @@
 
         var _absMoveY = Math.abs(me._moveY);
 
-        // ¼ÓÔØÉÏ·½
+        // åŠ è½½ä¸Šæ–¹
         if (me.opts.loadUpFn != '' && me.touchScrollTop <= 0 && me.direction == 'down' && !me.isLockUp) {
             e.preventDefault();
 
             me.$domUp = $('.' + me.opts.domUp.domClass);
-            // Èç¹û¼ÓÔØÇøÃ»ÓĞDOM
+            // å¦‚æœåŠ è½½åŒºæ²¡æœ‰DOM
             if (!me.upInsertDOM) {
                 me.$element.prepend('<div class="' + me.opts.domUp.domClass + '"></div>');
                 me.upInsertDOM = true;
@@ -164,16 +170,16 @@
 
             fnTransition(me.$domUp, 0);
 
-            // ÏÂÀ­
+            // ä¸‹æ‹‰
             if (_absMoveY <= me.opts.distance) {
                 me._offsetY = _absMoveY;
-                // todo£ºmoveÊ±»á²»¶ÏÇå¿Õ¡¢Ôö¼Ódom£¬ÓĞ¿ÉÄÜÓ°ÏìĞÔÄÜ£¬ÏÂÍ¬
+                // todoï¼šmoveæ—¶ä¼šä¸æ–­æ¸…ç©ºã€å¢åŠ domï¼Œæœ‰å¯èƒ½å½±å“æ€§èƒ½ï¼Œä¸‹åŒ
                 me.$domUp.html(me.opts.domUp.domRefresh);
-                // Ö¸¶¨¾àÀë < ÏÂÀ­¾àÀë < Ö¸¶¨¾àÀë*2
+                // æŒ‡å®šè·ç¦» < ä¸‹æ‹‰è·ç¦» < æŒ‡å®šè·ç¦»*2
             } else if (_absMoveY > me.opts.distance && _absMoveY <= me.opts.distance * 2) {
                 me._offsetY = me.opts.distance + (_absMoveY - me.opts.distance) * 0.5;
                 me.$domUp.html(me.opts.domUp.domUpdate);
-                // ÏÂÀ­¾àÀë > Ö¸¶¨¾àÀë*2
+                // ä¸‹æ‹‰è·ç¦» > æŒ‡å®šè·ç¦»*2
             } else {
                 me._offsetY = me.opts.distance + me.opts.distance * 0.5 + (_absMoveY - me.opts.distance * 2) * 0.2;
             }
@@ -203,7 +209,7 @@
         }
     }
 
-    // ÖØĞÂ»ñÈ¡ÎÄµµ¸ß¶È
+    // é‡æ–°è·å–æ–‡æ¡£é«˜åº¦
     function fnRecoverContentHeight(me) {
         if (me.opts.scrollArea == win) {
             me._scrollContentHeight = $doc.height();
@@ -212,45 +218,45 @@
         }
     }
 
-    // Ëø¶¨
+    // é”å®š
     MyDropLoad.prototype.lock = function (direction) {
         var me = this;
-        // Èç¹û²»Ö¸¶¨·½Ïò
+        // å¦‚æœä¸æŒ‡å®šæ–¹å‘
         if (direction === undefined) {
-            // Èç¹û²Ù×÷·½ÏòÏòÉÏ
+            // å¦‚æœæ“ä½œæ–¹å‘å‘ä¸Š
             if (me.direction == 'up') {
                 me.isLockDown = true;
-                // Èç¹û²Ù×÷·½ÏòÏòÏÂ
+                // å¦‚æœæ“ä½œæ–¹å‘å‘ä¸‹
             } else if (me.direction == 'down') {
                 me.isLockUp = true;
             } else {
                 me.isLockUp = true;
                 me.isLockDown = true;
             }
-            // Èç¹ûÖ¸¶¨ËøÉÏ·½
+            // å¦‚æœæŒ‡å®šé”ä¸Šæ–¹
         } else if (direction == 'up') {
             me.isLockUp = true;
-            // Èç¹ûÖ¸¶¨ËøÏÂ·½
+            // å¦‚æœæŒ‡å®šé”ä¸‹æ–¹
         } else if (direction == 'down') {
             me.isLockDown = true;
         }
     };
 
-    // ½âËø
+    // è§£é”
     MyDropLoad.prototype.unlock = function () {
         var me = this;
-        // ¼òµ¥´Ö±©½âËø
+        // ç®€å•ç²—æš´è§£é”
         me.isLockUp = false;
         me.isLockDown = false;
     };
 
-    // ÎŞÊı¾İ
+    // æ— æ•°æ®
     MyDropLoad.prototype.noData = function () {
         var me = this;
         me.isData = false;
     };
 
-    // ÖØÖÃ
+    // é‡ç½®
     MyDropLoad.prototype.resetload = function () {
         var me = this;
         if (me.direction == 'down' && me.upInsertDOM) {
@@ -262,19 +268,19 @@
             });
         } else if (me.direction == 'up') {
             me.loading = false;
-            // Èç¹ûÓĞÊı¾İ
+            // å¦‚æœæœ‰æ•°æ®
             if (me.isData) {
-                // ¼ÓÔØÇøĞŞ¸ÄÑùÊ½
+                // åŠ è½½åŒºä¿®æ”¹æ ·å¼
                 me.$domDown.html(me.opts.domDown.domRefresh);
                 fnRecoverContentHeight(me);
             } else {
-                // Èç¹ûÃ»Êı¾İ
+                // å¦‚æœæ²¡æ•°æ®
                 me.$domDown.html(me.opts.domDown.domNoData);
             }
         }
     };
 
-    // css¹ı¶É
+    // cssè¿‡æ¸¡
     function fnTransition(dom, num) {
         dom.css({
             '-webkit-transition': 'all ' + num + 'ms',
