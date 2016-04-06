@@ -1,7 +1,7 @@
 /*
 * 下拉刷新，上拉加载插件 drop.js
 * by xqs @2016
-* 支持jquery&zepto
+* 支持 jquery & zepto
 */
 
 ;
