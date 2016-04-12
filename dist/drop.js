@@ -12,9 +12,9 @@
     var $win = $(win);
     var $doc = $(doc);
     $.fn.dropload = function (options) {
-        return new MyDropLoad(this, options);
+        return new Drop(this, options);
     };
-    var MyDropLoad = function (element, options) {
+    var Drop = function (element, options) {
         var me = this;
         me.$element = $(element);
         // 上方是否插入DOM
@@ -31,7 +31,7 @@
     };
 
     // 初始化
-    MyDropLoad.prototype.init = function (options) {
+    Drop.prototype.init = function (options) {
         var me = this;
         me.opts = $.extend(true, {}, {
             scrollArea: me.$element,                                            // 滑动区域
@@ -173,7 +173,7 @@
             // 下拉
             if (_absMoveY <= me.opts.distance) {
                 me._offsetY = _absMoveY;
-                // todo：move时会不断清空、增加dom，有可能影响性能，下同
+                // move时会不断清空、增加dom，有可能影响性能，下同
                 me.$domUp.html(me.opts.domUp.domRefresh);
                 // 指定距离 < 下拉距离 < 指定距离*2
             } else if (_absMoveY > me.opts.distance && _absMoveY <= me.opts.distance * 2) {
@@ -219,7 +219,7 @@
     }
 
     // 锁定
-    MyDropLoad.prototype.lock = function (direction) {
+    Drop.prototype.lock = function (direction) {
         var me = this;
         // 如果不指定方向
         if (direction === undefined) {
@@ -243,7 +243,7 @@
     };
 
     // 解锁
-    MyDropLoad.prototype.unlock = function () {
+    Drop.prototype.unlock = function () {
         var me = this;
         // 简单粗暴解锁
         me.isLockUp = false;
@@ -251,13 +251,13 @@
     };
 
     // 无数据
-    MyDropLoad.prototype.noData = function () {
+    Drop.prototype.noData = function () {
         var me = this;
         me.isData = false;
     };
 
     // 重置
-    MyDropLoad.prototype.resetload = function () {
+    Drop.prototype.resetload = function () {
         var me = this;
         if (me.direction == 'down' && me.upInsertDOM) {
             me.$domUp.css({'height': '0'}).on('webkitTransitionEnd mozTransitionEnd transitionend', function () {
