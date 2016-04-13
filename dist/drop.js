@@ -7,10 +7,9 @@
 ;
 (function ($) {
     'use strict';
-    var win = window;
-    var doc = document;
-    var $win = $(win);
-    var $doc = $(doc);
+    var win = window, doc = document,
+        $win = $(win), $doc = $(doc);
+
     $.fn.dropload = function (options) {
         return new Drop(this, options);
     };
@@ -25,7 +24,7 @@
         me.isLockUp = false;
         me.isLockDown = false;
         // 是否有数据
-        me.isData = true;
+        me.hasData = true;
         me._scrollTop = 0;
         me.init(options);
     };
@@ -253,7 +252,7 @@
     // 无数据
     Drop.prototype.noData = function () {
         var me = this;
-        me.isData = false;
+        me.hasData = false;
     };
 
     // 重置
@@ -269,7 +268,7 @@
         } else if (me.direction == 'up') {
             me.loading = false;
             // 如果有数据
-            if (me.isData) {
+            if (me.hasData) {
                 // 加载区修改样式
                 me.$domDown.html(me.opts.domDown.domRefresh);
                 fnRecoverContentHeight(me);
