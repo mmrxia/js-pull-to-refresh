@@ -2,202 +2,82 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="initial-scale=1, user-scalable=0, minimal-ui" charset="UTF-8">
-    <title>pull to refresh</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>下拉刷新</title>
     <style>
-        *{margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:none}
-        html{font-size:10px}
-        body{background-color:#f5f5f5;font-size:1.2em}
-        .outer{position:absolute;top:0;left:0;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;width:100%;height:100%;-ms-flex-direction:column;-webkit-box-orient:vertical;box-orient:vertical;-webkit-flex-direction:column;flex-direction:column}
-        .header{position:relative;height:44px;border-bottom:1px solid #ccc;background-color:#eee;line-height:44px}
-        .header h1{text-align:center;font-weight:400;font-size:2rem}
-        .header .btn{position:absolute;top:0;right:0;width:4em;height:100%;background-color:#ccc;color:#06c;text-align:center;font-size:1.4rem}
-        .header .btn:active{background-color:#aaa;color:#fff}
-        .inner{overflow-y:scroll;background-color:#fff;-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;-webkit-overflow-scrolling:touch}
-        .inner .item{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;padding:3.125%;border-bottom:1px solid #ddd;color:#333;text-decoration:none;-ms-flex-align:center;-webkit-box-align:center;box-align:center;-webkit-align-items:center;align-items:center}
-        .inner .item img{display:block;width:40px;height:40px;border:1px solid #ddd}
-        .inner .item h3{display:block;overflow:hidden;margin:0 10px;width:100%;max-height:40px;font-size:1.2rem;line-height:20px;-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1}
-        .inner .item .date{display:block;height:20px;color:#999;line-height:20px}
-        .opacity{-webkit-animation:opacity .5s linear;animation:opacity .5s linear}
-        @-webkit-keyframes opacity{0%{opacity:0}
-            100%{opacity:1}
-        }
-        @keyframes opacity{0%{opacity:0}
-            100%{opacity:1}
-        }
+
+        /*page diy*/
+        *{box-sizing: border-box;padding: 0;margin: 0}
+        html,body{height: 100%;-webkit-overflow-scrolling: touch;}
+        #app{background: #f0f0f0;height: 1000px;font-family: "microsoft yahei";text-align: center}
+
+
+        /*===下拉刷新组件===*/
+        .dropload-layer{height:0;overflow:hidden;line-height:50px;text-align:center;-webkit-transition:.4s;transition:.4s;position: relative}
+        .dropload-layer .inner{position: absolute;left: 0;right: 0;bottom: 0;}
+
+        .dropload-layer .down{display:inline-block}
+        .dropload-layer .refresh,.dropload-layer .up{display:none}
+        .dropload-layer .arrow{display:inline-block;width:20px;height:20px;margin-right:4px;vertical-align:middle;-webkit-transition:.4s;transition:.4s;-webkit-transform:rotate(0deg) translate3d(0,0,0);transform:rotate(0deg) translate3d(0,0,0);background-size:13px 20px;background:url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2026%2040'%3E%3Cpolygon%20points%3D'9%2C22%209%2C0%2017%2C0%2017%2C22%2026%2C22%2013.5%2C40%200%2C22'%20fill%3D'%238c8c8c'%2F%3E%3C%2Fsvg%3E") no-repeat center;}
+        .dropload-layer .loader{display:none;margin-right:4px;width:20px;height:20px;vertical-align:middle;animation:rotate 1s linear infinite forwards; -webkit-animation:rotate 1s linear infinite forwards; }
+        .dropload-layer .loader:after{display:block;width:100%;height:100%;content:"";background-size:cover;background:url("data:image/svg+xml;charset=utf-8,%3Csvg%20viewBox%3D'0%200%20120%20120'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20xmlns%3Axlink%3D'http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink'%3E%3Cdefs%3E%3Cline%20id%3D'l'%20x1%3D'60'%20x2%3D'60'%20y1%3D'7'%20y2%3D'27'%20stroke%3D'%236c6c6c'%20stroke-width%3D'11'%20stroke-linecap%3D'round'%2F%3E%3C%2Fdefs%3E%3Cg%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(30%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(60%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(90%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(120%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(150%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.37'%20transform%3D'rotate(180%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.46'%20transform%3D'rotate(210%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.56'%20transform%3D'rotate(240%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.66'%20transform%3D'rotate(270%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.75'%20transform%3D'rotate(300%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.85'%20transform%3D'rotate(330%2060%2C60)'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") no-repeat center;}
+
+        .pull-up .down,.refreshing .down{display:none}
+        .pull-up .arrow{display:inline-block;-webkit-transform:rotate(180deg) translate3d(0,0,0);transform:rotate(180deg) translate3d(0,0,0)}
+        .pull-up .up{display:inline-block}
+        .pull-down .arrow{display:inline-block}
+        .pull-down .down{display:inline-block}
+        .touching .dropload-layer{-webkit-transition: 0s;transition: 0s;}
+
+        /*加载中*/
+        .refreshing .dropload-layer{height: 50px;}
+        .refreshing .arrow{display:none}
+        .refreshing .loader{display:inline-block}
+        .refreshing .refresh{display:inline-block}
     </style>
 </head>
 <body>
-    <!--demo-->
-    <div class="outer">
-        <div class="header">
-            <h1>头部</h1>
-            <a href="javascript:;" class="btn lock">锁定</a>
-            <div class="footer" style="position:absolute;left:0;top:0;background-color:#fff;">
-                <a href=""></a>
-                <a href="#"></a>
-            </div>
-        </div>
-        <div class="inner">
-            <div class="lists">
-                <a class="item" href="#">
-                    <img src="http://d6.yihaodianimg.com/N02/M0B/81/5A/CgQCsVMhX_mAAvXsAAJDE3K2zh485900_80x80.jpg" alt="">
-                    <h3>1文字描述文字描述</h3>
-                    <span class="date">2014-14-14</span>
-                </a>
-                <a class="item" href="#">
-                    <img src="http://d6.yihaodianimg.com/N02/M0B/81/5A/CgQCsVMhX_mAAvXsAAJDE3K2zh485900_80x80.jpg" alt="">
-                    <h3>2文字描述文字描述文字描述文字描述文字描述文字描述文字描述文字描述文字描述文字描述</h3>
-                    <span class="date">2014-14-14</span>
-                </a>
-                <a class="item" href="#">
-                    <img src="http://d6.yihaodianimg.com/N02/M0B/81/5A/CgQCsVMhX_mAAvXsAAJDE3K2zh485900_80x80.jpg" alt="">
-                    <h3>3文字描述文字描述文字描述文字描述文字描述</h3>
-                    <span class="date">2014-14-14</span>
-                </a>
-                <a class="item" href="#">
-                    <img src="http://d6.yihaodianimg.com/N02/M0B/81/5A/CgQCsVMhX_mAAvXsAAJDE3K2zh485900_80x80.jpg" alt="">
-                    <h3>4文字描述文字描述文字描述文字描述文字描述</h3>
-                    <span class="date">2014-14-14</span>
-                </a>
-                <a class="item" href="#">
-                    <img src="http://d6.yihaodianimg.com/N02/M0B/81/5A/CgQCsVMhX_mAAvXsAAJDE3K2zh485900_80x80.jpg" alt="">
-                    <h3>5文字描述文字描述文字描述文字描述文字描述</h3>
-                    <span class="date">2014-14-14</span>
-                </a>
-                <a class="item" href="#">
-                    <img src="http://d6.yihaodianimg.com/N02/M0B/81/5A/CgQCsVMhX_mAAvXsAAJDE3K2zh485900_80x80.jpg" alt="">
-                    <h3>6文字描述文字描述文字描述文字描述文字描述</h3>
-                    <span class="date">2014-14-14</span>
-                </a>
-                <a class="item" href="#">
-                    <img src="http://d6.yihaodianimg.com/N02/M0B/81/5A/CgQCsVMhX_mAAvXsAAJDE3K2zh485900_80x80.jpg" alt="">
-                    <h3>7文字描述文字描述文字描述文字描述文字描述</h3>
-                    <span class="date">2014-14-14</span>
-                </a>
-                <a class="item" href="#">
-                    <img src="http://d6.yihaodianimg.com/N02/M0B/81/5A/CgQCsVMhX_mAAvXsAAJDE3K2zh485900_80x80.jpg" alt="">
-                    <h3>8文字描述文字描述文字描述文字描述文字描述</h3>
-                    <span class="date">2014-14-14</span>
-                </a>
-                <a class="item" href="#">
-                    <img src="http://d6.yihaodianimg.com/N02/M0B/81/5A/CgQCsVMhX_mAAvXsAAJDE3K2zh485900_80x80.jpg" alt="">
-                    <h3>9文字描述文字描述文字描述文字描述文字描述</h3>
-                    <span class="date">2014-14-14</span>
-                </a>
-                <a class="item" href="#">
-                    <img src="http://d6.yihaodianimg.com/N02/M0B/81/5A/CgQCsVMhX_mAAvXsAAJDE3K2zh485900_80x80.jpg" alt="">
-                    <h3>10文字描述文字描述文字描述文字描述文字描述</h3>
-                    <span class="date">2014-14-14</span>
-                </a>
-                <a class="item" href="#">
-                    <img src="http://d6.yihaodianimg.com/N02/M0B/81/5A/CgQCsVMhX_mAAvXsAAJDE3K2zh485900_80x80.jpg" alt="">
-                    <h3>11文字描述文字描述文字描述文字描述文字描述</h3>
-                    <span class="date">2014-14-14</span>
-                </a>
-                <a class="item" href="#">
-                    <img src="http://d6.yihaodianimg.com/N02/M0B/81/5A/CgQCsVMhX_mAAvXsAAJDE3K2zh485900_80x80.jpg" alt="">
-                    <h3>12文字描述文字描述文字描述文字描述文字描述</h3>
-                    <span class="date">2014-14-14</span>
-                </a>
-            </div>
-        </div>
-    </div>
-    <!-- jQuery1.7以上 或者 Zepto 二选一，不要同时都引用 -->
-    <script src="jquery-latest.min.js"></script>
-    <script src="dist/drop.min.js"></script>
-    <script>
-        $(function(){
-            // 按钮操作
-            $('.header .btn').on('click',function(){
-                var $this = $(this);
-                if(!!$this.hasClass('lock')){
-                    $this.attr('class','btn unlock');
-                    $this.text('解锁');
-                    // 锁定
-                    dropload.lock();
-                    $('.dropload-down').hide();
-                }else{
-                    $this.attr('class','btn lock');
-                    $this.text('锁定');
-                    // 解锁
-                    dropload.unlock();
-                    $('.dropload-down').show();
-                }
-            });
 
-            // dropload
-            var dropload = $('.inner').dropload({
-                domUp : {
-                    domClass   : 'dropload-up',
-                    domRefresh : '<div class="dropload-refresh">↓下拉刷新</div>',
-                    domUpdate  : '<div class="dropload-update">↑释放更新</div>',
-                    domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中...</div>'
-                },
-                domDown : {
-                    domClass   : 'dropload-down',
-                    domRefresh : '<div class="dropload-refresh">↑上拉加载更多</div>',
-                    domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中...</div>',
-                    domNoData  : '<div class="dropload-noData">暂无数据</div>'
-                },
-                loadUpFn : function(me){
-                    $.ajax({
-                        type: 'GET',
-                        url: 'example/update.json',
-                        dataType: 'json',
-                        success: function(data){
-                            var result = '';
-                            for(var i = 0; i < data.lists.length; i++){
-                                result +=   '<a class="item opacity" href="'+data.lists[i].link+'">'
-                                        +'<img src="'+data.lists[i].pic+'" alt="">'
-                                        +'<h3>'+data.lists[i].title+'</h3>'
-                                        +'<span class="date">'+data.lists[i].date+'</span>'
-                                        +'</a>';
-                            }
-                            // 为了测试，延迟1秒加载
-                            setTimeout(function(){
-                                $('.lists').html(result);
-                                // 每次数据加载完，必须重置
-                                dropload.resetload();
-                            },1000);
-                        },
-                        error: function(xhr, type){
-                            alert('Ajax error!');
-                            // 即使加载出错，也得重置
-                            dropload.resetload();
-                        }
-                    });
-                },
-                loadDownFn : function(me){
-                    $.ajax({
-                        type: 'GET',
-                        url: 'example/more.json',
-                        dataType: 'json',
-                        success: function(data){
-                            var result = '';
-                            for(var i = 0; i < data.lists.length; i++){
-                                result +=   '<a class="item opacity" href="'+data.lists[i].link+'">'
-                                        +'<img src="'+data.lists[i].pic+'" alt="">'
-                                        +'<h3>'+data.lists[i].title+'</h3>'
-                                        +'<span class="date">'+data.lists[i].date+'</span>'
-                                        +'</a>';
-                            }
-                            // 为了测试，延迟1秒加载
-                            setTimeout(function(){
-                                $('.lists').append(result);
-                                // 每次数据加载完，必须重置
-                                dropload.resetload();
-                            },1000);
-                        },
-                        error: function(xhr, type){
-                            alert('Ajax error!');
-                            // 即使加载出错，也得重置
-                            dropload.resetload();
-                        }
-                    });
-                }
-            });
+<div id="app">
+    <div style="height: 200px;background: #ffce80;">1</div>
+    <div style="height: 200px;background: #c3d9ff;">2</div>
+    <div style="height: 200px;background: #FC687C;">3</div>
+    <div style="height: 200px;background: #FDA100;">4</div>
+    <div style="height: 200px;background: #666;">5</div>
+</div>
+
+
+<script src="jquery-latest.min.js"></script>
+<script src="dist/dropload.min.js"></script>
+<script>
+
+    /*下拉刷新*/
+    $.dropLoad = function (args) {
+        var $target = $(args.container) || $('.dropload');
+        $target[0] && $target.pullToRefresh().on("pull-to-refresh", function () {
+            args.callback ? args.callback.call(this, $target) : (function () {
+                var timer = setTimeout(function () {
+                    clearTimeout(timer);
+                    $target.pullToRefreshDone();
+                }, 500);
+            })()
         });
-    </script>
+    };
+
+
+    /*调用*/
+    $.dropLoad({
+        container: $("body"),
+        callback: function (me) {
+            setTimeout(function() {
+                //do something... eg:ajax
+                console.log('end');
+
+                me.pullToRefreshDone();
+            }, 1000);
+        }
+    });
+
+</script>
 </body>
 </html>

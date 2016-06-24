@@ -9,7 +9,7 @@ var gulp = require('gulp'),
 
 // Task: js uglify
 gulp.task('js', function () {
-    return gulp.src(['./dist/drop.js'])
+    return gulp.src(['./dist/*.js'])
         .pipe(rename({suffix: '.min'}))
         .pipe(uglify())
         .pipe(gulp.dest('./dist'));
