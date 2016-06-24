@@ -1,7 +1,8 @@
-# pull-to-refresh
-js实现移动端下拉刷新或加载功能，兼容jQuery和Zepto
+### pull-to-refresh
+  
+  `javascript`实现移动端下拉刷新或加载功能，兼容`jQuery`和`Zepto`。
 
-#使用方法示例：
+###使用方法示例：
 
 ```javascript
 
@@ -16,7 +17,7 @@ $target.pullToRefresh().on("pull-to-refresh", function () {
   
 ```
 
-> 栗子中简单做了一层封装，这样没有下拉回调函数时也会有一个500ms加载的效果
+> 栗子中简单做了一层封装，这样没有设置下拉回调函数时也会有一个500ms加载的效果。
 
 代码如下所示：
 
@@ -51,5 +52,5 @@ $target.pullToRefresh().on("pull-to-refresh", function () {
    
 ```
 
-#演示地址
-https://rawgit.com/mmrxia/js-pull-to-refresh/master/demo.html
+### 演示地址
+[点我查看演示](https://rawgit.com/mmrxia/js-pull-to-refresh/master/demo.html)
