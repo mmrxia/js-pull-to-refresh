@@ -53,4 +53,11 @@ $target.pullToRefresh().on("pull-to-refresh", function () {
 ```
 
 ### 演示地址
+
 [点我查看演示](https://rawgit.com/mmrxia/js-pull-to-refresh/master/demo.html)
+
+扫描下方二维码，手机上查看
+
+![扫一扫](demo.png)
+
+欢迎PR，看到后会第一时间回复。^_^
